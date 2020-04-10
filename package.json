@@ -1,7 +1,7 @@
 {
     "name": "nomard--youtube_clone",
     "version": "1.0.0",
-    "description": "Youtube Clone with Nomard Corder",
+    "description": "Youtube Clone with Nomad Coder",
     "main": "index.js",
     "scripts": {
         "start": "nodemon --exec babel-node init.js --delay 2",
