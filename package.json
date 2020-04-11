@@ -1,5 +1,5 @@
 {
-    "name": "nomard--youtube_clone",
+    "name": "nomad--youtube_clone",
     "version": "1.0.0",
     "description": "Youtube Clone with Nomad Coder",
     "main": "index.js",
@@ -9,14 +9,14 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/chinsanchung/nomard--youtube_clone.git"
+        "url": "git+https://github.com/chinsanchung/nomad--youtube_clone.git"
     },
     "author": "chinsanchung",
     "license": "ISC",
     "bugs": {
-        "url": "https://github.com/chinsanchung/nomard--youtube_clone/issues"
+        "url": "https://github.com/chinsanchung/nomad--youtube_clone/issues"
     },
-    "homepage": "https://github.com/chinsanchung/nomard--youtube_clone#readme",
+    "homepage": "https://github.com/chinsanchung/nomad--youtube_clone#readme",
     "dependencies": {
         "@babel/core": "^7.9.0",
         "@babel/node": "^7.8.7",
