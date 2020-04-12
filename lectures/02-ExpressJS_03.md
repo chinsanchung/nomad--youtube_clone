@@ -81,7 +81,117 @@ block content
         a.form-container__link(href=routes.changePassword) Change Password
 ```
 
-#### 2.21 Home Controller
+#### 2.21 Home Controller part One
 
 -   changePassword, editVideo, upload, home.pug 를 수정합니다. [링크](https://github.com/nomadcoders/wetube/commit/1eab310c03c2fa44a7abf916ef5a85e39942a189)
--   가짜 DB 를 만들어 연습삼아 연결해봅니다.
+-   가짜 DB 를 만들어 연습삼아 연결해봅니다. db.js 에 videos 배열을 작성했습니다.
+-   videoController 에 videos 를 가져와 home.pug 에 넣었습니다.
+
+```javascript
+export const home = (req, res) => {
+    res.render("home", { pageTitle: "Home", videos });
+};
+```
+
+-   home.pug 에 해당 데이터를 반복해 템플릿에 적용합니다.
+
+```pug
+block content
+    each item in videos
+        h1= item.title
+        p= item.description
+```
+
+#### 2.22 Home Controller part Two
+
+-   비디오를 보여주는 블록 코드 views/mixins/videoBlock.pug 를 만듭니다. 반복되는 코드를 재활용하는 이 방법을 **믹스인**이라 부릅니다.
+    -   믹스인은 웹사이트에서 자주 반복되는 HTML 코드를 가지고 있습니다.
+
+```pug
+mixin videoBlock(video = {})
+    .videoBlock
+        video.videoBlock__thum(src=video.videoFile, controls=true)
+        h4.videoBlock__title=video.title
+        h6.videoBlock__views=video.views
+```
+
+-   믹스인에 맞춰 home.pug 도 수정했습니다.
+
+```pug
+//- ...
+each item in videos
+    +videoBlock({
+        title: item.title,
+        views: item.views,
+        videoFile: item.videoFile
+    })
+```
+
+#### 2.23 Join Controller
+
+##### Search
+
+-   search.pug 에 비디오 믹스인 videoBlock.pug 를 넣고, 반복문 코드를 추가했습니다.
+
+##### Join
+
+-   누군가 회원가입을 하면 자동으로 로그인한 후 home 화면으로 이동시키고자 합니다.
+-   우선 컨트롤러에 getJoin, postJoin 함수를 생성합니다. 그 다음 globalRouter 를 수정합니다.
+-   postJoin 에 req.body 의 정보를 가져온 후, 비밀번호와 재입력 칸이 맞는지 확인합니다. 만약 아니라면 상태 코드 400을 전달하니다.
+    -   postJoin 의 req.body 를 보면 입력했던 정보가 객체로 나옵니다. 이것을 도와주는 미들웨어가 bodyParser 입니다. bodyParser 가 없으면 req.body 를 출력할 수 없습니다.
+
+```javascript
+export const getJoin = (req, res) => {
+    res.render("join", { pageTitle: "Join" });
+};
+export const postJoin = (req, res) => {
+    const { name, email, password, password2 } = req.body;
+    if (password !== password2) {
+        res.status(400);
+        res.render("join", { pageTitle: "Join" });
+    } else {
+        res.redirect(routes.home);
+    }
+};
+// globalRouter
+globalRouter.get(routes.join, getJoin);
+globalRouter.post(routes.join, postJoin);
+```
+
+#### 2.24 Log In and User Profile Controller
+
+-   login 도 join 과 비슷합니다. userController.js 에 getLogin, postLogin 을 작성합니다. 그 후 globalRouter 도 수정합니다.
+
+```javascript
+export const getLogin = (req, res) =>
+    res.render("login", { pageTitle: "Log In" });
+export const postLogin = (req, res) => {
+    res.redirect(routes.home);
+};
+// globalRouter
+globalRouter.get(routes.login, getLogin);
+globalRouter.post(routes.login, postLogin);
+```
+
+-   그 다음 header.pug 를 로그인 여부에 따라 다른 화면을 보여주도록 설정합니다.
+
+```pug
+.header__column
+    ul
+        if user.isAuthenticated
+            li
+                a(href=routes.join) Join
+            li
+                a(href=routes.join) Log In
+        else
+            if
+                a(routes.upload) Upload
+            if
+                a(href=routes.userDetail(user.id)) Profile
+            li
+                a(href=routes.logout) Log Out
+```
+
+-   middlewares.js 의 localMiddleware 에 isAuthenticated: true 객체를 입력합니다.
+
+-   URL 에 값이 담기도록 routes.js 의 userDetail 을 함수로 작성합니다.
