@@ -4,21 +4,21 @@
 
 #### 2.18 Search Controller
 
--   우선 search controller 를 아래와 같이 수정합니다.
+- 우선 search controller 를 아래와 같이 수정합니다.
 
 ```javascript
 // videoController
 export const search = (req, res) => {
-    const {
-        query: { term: searchingBy },
-    } = req; // const searchingBy = req.query.params.term 와 동일
-    res.render("search", { pageTitle: "Search", searchingBy });
+  const {
+    query: { term: searchingBy },
+  } = req; // const searchingBy = req.query.params.term 와 동일
+  res.render("search", { pageTitle: "Search", searchingBy });
 };
 ```
 
--   header.pue 에 Search form 을 만듭니다.
-    -   req.query.term 의 값을 "searchingBy"라는 이름으로 저장해서, search URL 에 지역 변수로 보냈습니다.
-    -   컨트롤러가 쿼리에 접근할 수 있도록 method 를 get 으로 잡았습니다. (get method 가 URL 에 정보를 전달해줍니다.)
+- header.pue 에 Search form 을 만듭니다.
+  - req.query.term 의 값을 "searchingBy"라는 이름으로 저장해서, search URL 에 지역 변수로 보냈습니다.
+  - 컨트롤러가 쿼리에 접근할 수 있도록 method 를 get 으로 잡았습니다. (get method 가 URL 에 정보를 전달해줍니다.)
 
 ```pue
 .header__column
@@ -28,7 +28,7 @@ export const search = (req, res) => {
 
 #### 2.19 Join: Log in HTML
 
--   join, login.pue 의 서식을 수정합니다.
+- join, login.pue 의 서식을 수정합니다.
 
 ```pug
 //- join
@@ -49,7 +49,7 @@ export const search = (req, res) => {
     include partials/socialLogin
 ```
 
--   socialLogin.pug 에 페이스북, 깃허브 로그인 기능을 추가합니다. "|"은 pug 가 Continue 를 요소로 취급하지 않도록 해줍니다.
+- socialLogin.pug 에 페이스북, 깃허브 로그인 기능을 추가합니다. "|"은 pug 가 Continue 를 요소로 취급하지 않도록 해줍니다.
 
 ```pug
 .social-login
@@ -65,7 +65,7 @@ export const search = (req, res) => {
 
 #### 2.20 Change Profile HTML
 
--   editProfile.pue 를 수정합니다.
+- editProfile.pue 를 수정합니다.
 
 ```pug
 extends layouts/main
@@ -83,17 +83,17 @@ block content
 
 #### 2.21 Home Controller part One
 
--   changePassword, editVideo, upload, home.pug 를 수정합니다. [링크](https://github.com/nomadcoders/wetube/commit/1eab310c03c2fa44a7abf916ef5a85e39942a189)
--   가짜 DB 를 만들어 연습삼아 연결해봅니다. db.js 에 videos 배열을 작성했습니다.
--   videoController 에 videos 를 가져와 home.pug 에 넣었습니다.
+- changePassword, editVideo, upload, home.pug 를 수정합니다. [링크](https://github.com/nomadcoders/wetube/commit/1eab310c03c2fa44a7abf916ef5a85e39942a189)
+- 가짜 DB 를 만들어 연습삼아 연결해봅니다. db.js 에 videos 배열을 작성했습니다.
+- videoController 에 videos 를 가져와 home.pug 에 넣었습니다.
 
 ```javascript
 export const home = (req, res) => {
-    res.render("home", { pageTitle: "Home", videos });
+  res.render("home", { pageTitle: "Home", videos });
 };
 ```
 
--   home.pug 에 해당 데이터를 반복해 템플릿에 적용합니다.
+- home.pug 에 해당 데이터를 반복해 템플릿에 적용합니다.
 
 ```pug
 block content
@@ -104,8 +104,8 @@ block content
 
 #### 2.22 Home Controller part Two
 
--   비디오를 보여주는 블록 코드 views/mixins/videoBlock.pug 를 만듭니다. 반복되는 코드를 재활용하는 이 방법을 **믹스인**이라 부릅니다.
-    -   믹스인은 웹사이트에서 자주 반복되는 HTML 코드를 가지고 있습니다.
+- 비디오를 보여주는 블록 코드 views/mixins/videoBlock.pug 를 만듭니다. 반복되는 코드를 재활용하는 이 방법을 **믹스인**이라 부릅니다.
+  - 믹스인은 웹사이트에서 자주 반복되는 HTML 코드를 가지고 있습니다.
 
 ```pug
 mixin videoBlock(video = {})
@@ -115,7 +115,7 @@ mixin videoBlock(video = {})
         h6.videoBlock__views=video.views
 ```
 
--   믹스인에 맞춰 home.pug 도 수정했습니다.
+- 믹스인에 맞춰 home.pug 도 수정했습니다.
 
 ```pug
 //- ...
@@ -131,27 +131,27 @@ each item in videos
 
 ##### Search
 
--   search.pug 에 비디오 믹스인 videoBlock.pug 를 넣고, 반복문 코드를 추가했습니다.
+- search.pug 에 비디오 믹스인 videoBlock.pug 를 넣고, 반복문 코드를 추가했습니다.
 
 ##### Join
 
--   누군가 회원가입을 하면 자동으로 로그인한 후 home 화면으로 이동시키고자 합니다.
--   우선 컨트롤러에 getJoin, postJoin 함수를 생성합니다. 그 다음 globalRouter 를 수정합니다.
--   postJoin 에 req.body 의 정보를 가져온 후, 비밀번호와 재입력 칸이 맞는지 확인합니다. 만약 아니라면 상태 코드 400을 전달하니다.
-    -   postJoin 의 req.body 를 보면 입력했던 정보가 객체로 나옵니다. 이것을 도와주는 미들웨어가 bodyParser 입니다. bodyParser 가 없으면 req.body 를 출력할 수 없습니다.
+- 누군가 회원가입을 하면 자동으로 로그인한 후 home 화면으로 이동시키고자 합니다.
+- 우선 컨트롤러에 getJoin, postJoin 함수를 생성합니다. 그 다음 globalRouter 를 수정합니다.
+- postJoin 에 req.body 의 정보를 가져온 후, 비밀번호와 재입력 칸이 맞는지 확인합니다. 만약 아니라면 상태 코드 400을 전달하니다.
+  - postJoin 의 req.body 를 보면 입력했던 정보가 객체로 나옵니다. 이것을 도와주는 미들웨어가 bodyParser 입니다. bodyParser 가 없으면 req.body 를 출력할 수 없습니다.
 
 ```javascript
 export const getJoin = (req, res) => {
-    res.render("join", { pageTitle: "Join" });
+  res.render("join", { pageTitle: "Join" });
 };
 export const postJoin = (req, res) => {
-    const { name, email, password, password2 } = req.body;
-    if (password !== password2) {
-        res.status(400);
-        res.render("join", { pageTitle: "Join" });
-    } else {
-        res.redirect(routes.home);
-    }
+  const { name, email, password, password2 } = req.body;
+  if (password !== password2) {
+    res.status(400);
+    res.render("join", { pageTitle: "Join" });
+  } else {
+    res.redirect(routes.home);
+  }
 };
 // globalRouter
 globalRouter.get(routes.join, getJoin);
@@ -160,20 +160,20 @@ globalRouter.post(routes.join, postJoin);
 
 #### 2.24 Log In and User Profile Controller
 
--   login 도 join 과 비슷합니다. userController.js 에 getLogin, postLogin 을 작성합니다. 그 후 globalRouter 도 수정합니다.
+- login 도 join 과 비슷합니다. userController.js 에 getLogin, postLogin 을 작성합니다. 그 후 globalRouter 도 수정합니다.
 
 ```javascript
 export const getLogin = (req, res) =>
-    res.render("login", { pageTitle: "Log In" });
+  res.render("login", { pageTitle: "Log In" });
 export const postLogin = (req, res) => {
-    res.redirect(routes.home);
+  res.redirect(routes.home); // 로그인 후 홈으로 이동
 };
 // globalRouter
 globalRouter.get(routes.login, getLogin);
 globalRouter.post(routes.login, postLogin);
 ```
 
--   그 다음 header.pug 를 로그인 여부에 따라 다른 화면을 보여주도록 설정합니다.
+- 그 다음 header.pug 를 로그인 여부에 따라 다른 화면을 보여주도록 설정합니다.
 
 ```pug
 .header__column
@@ -192,6 +192,81 @@ globalRouter.post(routes.login, postLogin);
                 a(href=routes.logout) Log Out
 ```
 
--   middlewares.js 의 localMiddleware 에 isAuthenticated: true 객체를 입력합니다.
+- middlewares.js 의 localMiddleware 에 isAuthenticated: true 객체를 입력합니다.
 
--   URL 에 값이 담기도록 routes.js 의 userDetail 을 함수로 작성합니다.
+- profile 링크를 누를 때 해당 id 가 포함된 주소로 가려면 어떻게 할까요.
+  - 미들웨어에 설정된 id 가 URL 에 들어가도록 routes.js 의 userDetail 을 함수로 작성합니다.
+  - 함수로 변경했으니 userRouter.js, header.pug 를 수정해야합니다.
+
+```javascript
+// routes.js
+userDetail: (id) => {
+  if (id) {
+    return `/users/${id}`;
+  } else return USER_DETAIL;
+},
+  // userRouter.js
+  userRouter.get(routes.userDetail(), userDetail);
+// header.pug
+// a(href=routes.userDetail(user.id)) Profile
+```
+
+- video 도 url 에 id 가 포함되도록 router.js, videoRouter.js,
+
+```javascript
+//routes.js
+videoDetaul: (id) => {
+  if (id) {
+    return `/videos/${id}`;
+  } else return VIDEO_DETAIL;
+};
+```
+
+#### 2.25 More Controllers
+
+##### 2.25.1 videoDetail 설정
+
+- 비디오를 클릭 시 videoDetail 페이지로 이동하도록 mixin 을 수정합니다. 그리고 videoBlock 을 사용하는 home.pug 에 id 를 넣습니다.
+
+```pug
+//- videoBlock.pug
+mixin videoBlock(video = {})
+    .videoBlock
+        a(href=routes.videoDetail(video.id))
+            video.videoBlock__thum(src=video.videoFile, controls=true)
+            h4.videoBlock__title=video.title
+            h6.videoBlock__views=video.views
+//- home.pug
+each item in videos
+    +videoBlock({
+        id: item.id,
+        title: item.title,
+        views: item.views,
+        videoFile: item.videoFile
+    })
+```
+
+- videoRouter 의 videoDetail 도 함수로 바꿨으므로 실행을 해줘야합니다.
+
+```javascript
+// vidoeRouter.js
+videoRouter.get(routes.videoDetail(), videoDetail);
+```
+
+##### 2.25.2 로그아웃
+
+- 로그아웃 후에 home 으로 redirect 하도록 변경합니다. logout() 함수에 logout.pug 로 render 하는 대신 `res.redirect(routes.home)`을 넣습니다.
+
+```javascript
+res.redirect(routes.home);
+```
+
+##### 2.25.3 video: getUpload, postUpload
+
+- videoController 에서 getUpload, postUpload 을 추가합니다.
+  - video 를 업로드 시 id 를 받게 되고, 그 id 에 대한 videoDetail 페이지로의 redirect 를 수행합니다.
+- videoRouter.js 에 getUpload, postUpload 라우트를 추가합니다.
+
+##### 2.25.4 required=true
+
+- join, login, upload.pug 파일의 input 속성으로 `required=true`를 추가하겠습니다.
