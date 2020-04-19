@@ -20,7 +20,7 @@ export const search = (req, res) => {
   - req.query.term 의 값을 "searchingBy"라는 이름으로 저장해서, search URL 에 지역 변수로 보냈습니다.
   - 컨트롤러가 쿼리에 접근할 수 있도록 method 를 get 으로 잡았습니다. (get method 가 URL 에 정보를 전달해줍니다.)
 
-```pue
+```pug
 .header__column
         form(action=routes.search method="get")
         input(type="text", placeholder="Search" name="term")
@@ -178,7 +178,7 @@ globalRouter.post(routes.login, postLogin);
 ```pug
 .header__column
     ul
-        if user.isAuthenticated
+        if !user.isAuthenticated
             li
                 a(href=routes.join) Join
             li
