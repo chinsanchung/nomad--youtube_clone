@@ -1,4 +1,3 @@
-
 # Created by https://www.gitignore.io/api/macos,linux,windows,vapor
 
 ### Linux ###
@@ -81,3 +80,7 @@ cobertura.xml
 
 node_modules
 package-lock.json
+# dotenv envronment variables file
+.env
+# Uploaded file changed by multer
+uploads
