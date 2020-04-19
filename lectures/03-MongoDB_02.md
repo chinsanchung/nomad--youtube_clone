@@ -227,3 +227,11 @@ export const search = async (req, res) => {
 ```
 
 - videoDetail.pug 에 comment 영역을 추가합니다. 지금은 댓글의 수만을 보여주도록 합니다.
+
+```pug
+.video__comments
+  if video.comments.length === 1
+    span.video__comment-number 1 comment
+  else
+    span.video__comment-number #{video.comments.length} comments
+```
