@@ -1,6 +1,9 @@
 import mongoose from "mongoose";
+import dotenv from "dotenv";
 
-mongoose.connect("", {
+dotenv.config();
+
+mongoose.connect(process.env.MONGO_URL, {
   // Configuration 을 보낼 수 있습니다.
   useNewUrlParser: true,
   useFindAndModify: false,
