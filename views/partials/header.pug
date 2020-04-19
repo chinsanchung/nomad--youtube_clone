@@ -2,7 +2,7 @@ header.header
     .header__column
         a(href=routes.home)
             i.fab.fa-youtube
-        .header__column
+    .header__column
         form(action=routes.search, method="get")
             input(type="text", placeholder="Search by term...", name="term")
     .header__column
@@ -13,9 +13,9 @@ header.header
                 li
                     a(href=routes.join) Log In
             else
-                if
+                li
                     a(href=`/videos${routes.upload}`) Upload
-                if
+                li
                     a(href=routes.userDetail(user.id)) Profile
                 li
                     a(href=routes.logout) Log Out
