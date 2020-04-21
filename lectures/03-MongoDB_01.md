@@ -8,6 +8,7 @@
 - MongoDB Cummunity Server 를 다운로드합니다.
 - 자바스크립트로 코드를 작성하려면 MongoDB로부터 instruction 을 받아야 합니다.
   - 그것을 해결해주는 것이 Mongoose 입니다.
+- 참고: 환경변수의 시스템 변수 Path 에서 `C:\Program Files\MongoDB\Server\4.2\bin`을 추가합니다.
 
 ##### Mongoose
 
