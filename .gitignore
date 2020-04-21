@@ -84,3 +84,5 @@ package-lock.json
 .env
 # Uploaded file changed by multer
 uploads
+# webpack setting directory
+static
