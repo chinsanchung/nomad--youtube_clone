@@ -4,7 +4,7 @@
   "description": "Youtube Clone with Nomad Coder",
   "main": "index.js",
   "scripts": {
-    "dev:server": "nodemon --exec babel-node init.js --delay 2",
+    "dev:server": "nodemon --exec babel-node init.js --delay 2 --ignore 'scss'",
     "dev:assets": "set WEBPACK_ENV=development&&webpack -w",
     "build:assets": "set WEBPACK_ENV=production&&webpack",
     "test": "echo \"Error: no test specified\" && exit 1"
