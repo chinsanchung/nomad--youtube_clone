@@ -4,7 +4,7 @@
 
 #### 11.0 Introduction to AWS S3
 
-- 설치할 패키지: yarn add aws-skd multe-s3
+- 설치할 패키지: yarn add aws-sdk multer-s3
 
 #### 11.1 Multer Uploads to AWS S3
 
