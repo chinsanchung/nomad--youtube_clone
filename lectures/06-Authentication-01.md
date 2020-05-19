@@ -35,9 +35,13 @@ app.post("/login", passport.authenticate("local"), (req, res) => {
 - 소셜 계정에는 비밀번호를 넣지 않습니다.
 - init.js 에 모델을 import 합니다.
 - passport-local-mongoose 를 import 해서 사용합니다
-  - 사용자계정으로 이메일을 사용하면, 이름을 계정으로 했을 때의 불편함(이름 변경 시 복잡한 절차가 필요)을 줄일 수 있습니다.
+  - passport 를 이용한 사용자 인증을 가능하게 해주는 플러그인입니다.
+  - 패스워드 설정, 패스워드 확인 등을 자동을 해줍니다.
+  - 여기서는 username(email), password 를 통한 로그인 방식을 위해 `usernameField: 'email'`로 했습니다.
+- 사용자계정으로 이메일을 사용하면, 이름을 계정으로 했을 때의 불편함(이름 변경 시 복잡한 절차가 필요)을 줄일 수 있습니다.
 
 ```javascript
+// User.js
 import mongoose from "mongoose";
 import passportLocalMongoose from "passport-local-mongoose";
 
@@ -48,6 +52,7 @@ const UserSchema = new mongoose.Schema({
   facebookId: Number,
   githubId: Number,
 });
+// passport 에 쓸 username 을 email 로 설정합니다.
 UserSchema.plugin(passportLocalMongoose, {
   usernameField: "email",
 });
@@ -60,10 +65,13 @@ export default model;
 ##### 6.1.2 passport.js
 
 - 우선 `yarn add passport-local`을 설치합니다.
+  - username, password 를 사용하는 사용자 인증 방식입니다.
+  - 이외에도 passport-facebook, passport-github 등이 있습니다.
 - `passport.use()`로 전략(로그인하는 방식)을 설정합니다.
   - 여기선 passport-local-mongoose 가 지원하는 방식으로 입력합니다. 복잡한 절차를 `User.createStrategy()` 한 줄로 줄일 수 있습니다.
 
 ```javascript
+// passport.js
 import passport from "passport";
 import User from "./models/User";
 
