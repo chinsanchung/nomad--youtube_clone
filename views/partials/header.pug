@@ -8,12 +8,12 @@ header.header
                 input(type="text", placeholder="Search by term...", name="term")
         .header__column
             ul
-                if !user.isAuthenticated
+                if !user
                     li
                         a(href=routes.join) Join
                     li
-                        a(href=routes.join) Log In
-                else
+                        a(href=routes.login) Log In
+                else 
                     li
                         a(href=`/videos${routes.upload}`) Upload
                     li

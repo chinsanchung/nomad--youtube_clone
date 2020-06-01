@@ -13,21 +13,29 @@ const config = {
     rules: [
       {
         test: /\.(js)$/,
-        use: [{ loader: "babel-loader" }],
+        use: [
+          {
+            loader: "babel-loader",
+          },
+        ],
       },
       {
         test: /\.(scss)$/,
         use: ExtractCSS.extract([
-          { loader: "css-loader" },
+          {
+            loader: "css-loader",
+          },
           {
             loader: "postcss-loader",
             options: {
-              plugin() {
+              plugins() {
                 return [autoprefixer({ browsers: "cover 99.5%" })];
               },
             },
           },
-          { loader: "sass-loader" },
+          {
+            loader: "sass-loader",
+          },
         ]),
       },
     ],

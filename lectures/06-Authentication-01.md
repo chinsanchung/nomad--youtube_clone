@@ -162,3 +162,77 @@ import "./passport";
 app.use(passport.initialize());
 app.use(passport.session());
 ```
+
+#### 6.4 Sessions on Express
+
+##### app.js
+
+- `yarn add express-session`을 설치합니다. 그리고 `import session from 'express-session'`을 넣습니다.
+- session 을 작성 후 옵션을 설정합니다.
+  - secret 은 무작위 문자열로, 쿠키에 들어있는 세션 id 를 암호화합니다. 여기에 특정 랜덤 문자열 [사이트](https://randomkeygen.com/)에서 가져와 넣으면, 그 글자를 알기 전까진 비밀을 유지해줍니다. env 파일에 그 문자열을 적어줍니다.
+  - resave: 세션을 강제로 저장합니다.
+  - saveUninitialized: 초기화되지 않은 세션을 저장소에 넣습니다. 새로운 새션이지만 변경사항이 없다면 세션을 초기화하지 않습니다. 로그인 세션에 쓰려면 false 를 해야합니다.
+
+```javascript
+// app.js
+app.use(
+  session({
+    secret: process.env.COOKIE_SECRET,
+    resave: true,
+    saveUninitialized: false,
+  })
+);
+```
+
+```javascript
+// middlewares.js
+export const localsMiddleware = (req, res, next) => {
+  res.locals.siteName = "WeTube";
+  res.locals.routes = routes;
+  res.locals.user = req.user || {};
+  res.locals.user = req.user || null;
+  console.log(req.user);
+  next();
+};
+```
+
+- 정리
+  - 1.express 는 세션을 통해 쿠기를 가지게 됐습니다. 세션이 쿠키를 해석하는 기능이 있기 때문입니다.
+  - 2.passport.session() 를 통해, 세션에 있는 쿠키를 이용합니다.
+  - 3.passport.deserializeUser() 로 쿠키를 해독합니다.
+  - 4.passport 가 쿠키에서 찾은 사용자를 미들웨어나 라우트의 요청 객체에 넣습니다. 이제 어느 라우트에서든 로그인한 사용자를 체크할 수 있습니다.
+- 하지만 매번 서버를 새로 실행시킬 때마다 세션 정보가 사라집니다. 현재 세션, 쿠키 정보들을 메모리에 저장하고 있어서입니다.
+
+#### 6.5 MongoStore and Middlewares
+
+##### 몽고와 세션 연결하기
+
+- 이제 몽고DB 를 사용해 세션을 저장할 차례입니다. `yarn add connect-mongo`를 설치합니다.
+  - connect-mongo 를 통해 세션에게 데이터를 몽고db 저장소에 넣으라고 명령합니다.
+- 쿠키저장소 CookieStore 를 만들고, 세션을 입력합니다.
+- 그 후, 세션 설정에 store 를 추가합니다.
+  - 이제 쿠키스토어와 몽고를 연결해야 합니다. 몽구스를 불러와 세션 store 에 연결합니다.
+- 이제 서버를 재시작하더라도 쿠키를 계속 보존하고, 유저는 여전히 로그인 상태를 유지할 것입니다.
+
+```javascript
+// app.js
+import MongoStore from "connect-mongo";
+
+const CookieStore = MongoStore(session);
+app.use(
+  session({
+    secret: process.env.COOKIE_SECRET,
+    resave: true,
+    saveUninitialized: false,
+    saveUninitialized: false
+    saveUninitialized: false,
+    store: new CokieStore({ mongooseConnection: mongoose.connection })
+  })
+);
+```
+
+##### routes 출입 제한하기
+
+- 제한이라는 뜻은, 로그인된 사용자는 join 화면으로 접근하지 못하도록 막는 등의 행동을 뜻합니다.
+- 새로운 미들웨어 onlyPublic 을 만들어서, 로그인 유저가 있으면 특정 컨트롤러에 접근 못하도록 만들었습니다.
+- 그리고 로그인한 유저만 사용가능한 라우트를 설정하는 미들웨어도 만듭니다.
