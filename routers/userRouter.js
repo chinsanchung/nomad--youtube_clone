@@ -3,7 +3,7 @@ import routes from "../routes";
 import {
   userDetail,
   editProfile,
-  changePassword,
+  changePassword
 } from "../controllers/userController";
 import { onlyPrivate } from "../middlewares";
 
